@@ -40,7 +40,7 @@ class Lesson(models.Model):
     link = models.URLField()
 
     class Meta:
-        ordering = ('-id',)
+        ordering = ('id',)
         verbose_name = 'Урок'
         verbose_name_plural = 'Уроки'
 
