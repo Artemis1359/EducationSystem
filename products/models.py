@@ -15,6 +15,8 @@ class Product(models.Model):
     name = models.CharField(max_length=200)
     date = models.DateTimeField()
     price = models.IntegerField()
+    min_group_size = models.SmallIntegerField(default=1)
+    max_group_size = models.IntegerField(default=1000)
 
     class Meta:
         ordering = ('id',)
@@ -59,6 +61,14 @@ class Group(models.Model):
 
     students = models.ManyToManyField(User, through='StudentGroup')
 
+    class Meta:
+        ordering = ('name',)
+        verbose_name = 'Группа'
+        verbose_name_plural = 'Группы'
+
+    def __str__(self):
+        return f'{self.name}'
+
 
 class StudentGroup(models.Model):
     """Вспомогательный класс для студентов в группе."""
@@ -76,9 +86,23 @@ class StudentGroup(models.Model):
         on_delete=models.CASCADE
     )
 
+    class Meta:
+        ordering = ('id',)
+        verbose_name = 'Студент в группе'
+        verbose_name_plural = 'Студенты в группах'
+        constraints = [
+            models.UniqueConstraint(
+                fields=('student', 'group'),
+                name='unique_student_group'
+            )
+        ]
+
+    def __str__(self):
+        return f'{self.student}  {self.group}'
+
 
 class UserProduct(models.Model):
-    """ Вспомогательный класс для пользователей приобревших товар"""
+    """ Вспомогательный класс для пользователей приобретающих товар"""
 
     product = models.ForeignKey(
         Product,
@@ -92,3 +116,17 @@ class UserProduct(models.Model):
         related_name='user_products',
         on_delete=models.CASCADE
     )
+
+    class Meta:
+        ordering = ('id',)
+        verbose_name = 'Товар клиента'
+        verbose_name_plural = 'Товары клиентов'
+        constraints = [
+            models.UniqueConstraint(
+                fields=('client', 'product'),
+                name='unique_client_product'
+            )
+        ]
+
+    def __str__(self):
+        return f'{self.product}  {self.client}'
