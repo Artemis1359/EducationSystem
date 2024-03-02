@@ -1,7 +1,5 @@
 from rest_framework import permissions
 
-from products.models import UserProduct
-
 
 class IsAdminOrReadOnly(permissions.BasePermission):
     """Доступ только пользователея с ролью 'Admin', либо только чтение."""

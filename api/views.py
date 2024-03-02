@@ -6,14 +6,20 @@ from rest_framework.permissions import IsAuthenticated
 
 from api.group_algo import add_user_to_group
 from api.permissions import IsAdminOrReadOnly, IsAuthor
-from api.serializers import GroupSerializer, LessonSerializer, ProductSerializer, ShortGroupSerializer, ShortProductSerializer, UserProductSerializer
+from api.serializers import (
+    GroupSerializer,
+    LessonSerializer,
+    ProductSerializer,
+    ShortGroupSerializer,
+    ShortProductSerializer,
+    UserProductSerializer
+)
 from products.models import Group, Lesson, Product, UserProduct
 
 
 class GroupViewSet(viewsets.ModelViewSet):
     """Вьюсет для класса Group."""
     permission_classes = (IsAuthenticated, IsAdminOrReadOnly,)
-
 
     def get_queryset(self):
         user = self.request.user
@@ -24,6 +30,7 @@ class GroupViewSet(viewsets.ModelViewSet):
             return ShortGroupSerializer
         return GroupSerializer
 
+
 class LessonViewSet(viewsets.ModelViewSet):
     """Вьюсет для класса Lesson."""
     serializer_class = LessonSerializer
@@ -31,7 +38,9 @@ class LessonViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        purchased_products_ids = UserProduct.objects.filter(client=user).values_list('product_id', flat=True)
+        purchased_products_ids = (UserProduct.objects.filter(
+            client=user
+        ).values_list('product_id', flat=True))
         queryset = Lesson.objects.filter(product_id__in=purchased_products_ids)
         return queryset
 
@@ -49,7 +58,6 @@ class ProductViewSet(viewsets.ModelViewSet):
         if self.action == 'retrieve':
             return ProductSerializer
         return ShortProductSerializer
-
 
     @action(detail=True, methods=['post'])
     def purchase(self, request, pk):

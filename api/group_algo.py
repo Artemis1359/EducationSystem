@@ -9,5 +9,6 @@ def add_user_to_group(student, product):
             StudentGroup.objects.create(student=student, group=group)
             return
     new_group_order = max_order + 1
-    new_group = Group.objects.create(product=product, name=f'Group {new_group_order} for {product}')
+    new_group = Group.objects.create(
+        product=product, name=f'Group {new_group_order} for {product}')
     StudentGroup.objects.create(student=student, group=new_group)

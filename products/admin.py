@@ -26,12 +26,14 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ('id', 'author', 'name', 'date', 'price')
     empty_value_display = '-пусто-'
 
+
 @admin.register(StudentGroup)
 class StudentGroupAdmin(admin.ModelAdmin):
     list_display = ('student', 'group',)
     list_filter = ('student', 'group',)
     search_fields = ('student', 'group',)
     empty_value_display = '-пусто-'
+
 
 @admin.register(UserProduct)
 class UserProductAdmin(admin.ModelAdmin):
